@@ -10,6 +10,8 @@
 .settings
 .springBeans
 
+*.logs
+
 ### IntelliJ IDEA ###
 .idea
 *.iws

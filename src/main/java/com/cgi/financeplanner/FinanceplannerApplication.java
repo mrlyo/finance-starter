@@ -1,4 +1,4 @@
-package com.cgi.financeplanner.financeplanner;
+package com.cgi.financeplanner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

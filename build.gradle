@@ -22,12 +22,17 @@ sourceCompatibility = 1.8
 repositories {
 	mavenCentral()
 }
+bootJar {
+	baseName = 'gs-spring-boot'
+	version ='0.1.0'
+}
 
 
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	runtime('org.springframework.boot:spring-boot-devtools')
-	compileOnly('org.projectlombok:lombok')
+	runtime('org.projectlombok:lombok')
+	compile('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
