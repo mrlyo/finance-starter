@@ -7,7 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 @Controller
 public class MainController {
@@ -24,31 +28,40 @@ public class MainController {
 
     @GetMapping("/start")
     public String home(Model model){
-
         logger.info("home methode wurde aufgerufen.");
-
-        ViewModel viewmodel = new ViewModel();
-        model.addAttribute("daten", viewmodel);
+//        ViewModel viewmodel = new ViewModel();
+//        model.addAttribute("daten", viewmodel);
         return "homeview";
     }
 
 
     @PostMapping("/sendFormData")
-    public String sendFormData(@ModelAttribute ViewModel dataModel, Model model){
-
-
+    public String sendFormData(@ModelAttribute ViewModel daten, Model model){
+        db_service.insert(daten);
         return "homeview";
     }
 
     @GetMapping("/connect")
     public String connect(Model model){
-
-    logger.info("Die Controllermethode connect wurde aufgerufen.");
+        logger.info("Die Controllermethode connect wurde aufgerufen.");
         String result = "";
+        model.addAttribute("daten", new ViewModel());
+        List<String> liste = db_service.readDatabases();
+        model.addAttribute("databases",liste );
+        logger.info("Die Datenbankabfrage hat {} Datenbanken gefunden", liste);
+        return "homeview";
+    }
 
-        result =  db_service.connect();
-        logger.info("Das Ergebnis der Verbindung war {} und wurde dem COntroller zurückgeben", result);
-        model.addAttribute("result", result);
-        return "result";
+    @GetMapping("/listTransactions")
+    public String listTransactions(Model model){
+
+       model.addAttribute("transactions", db_service.ReturnAllTransactions());
+        return "homeview";
+    }
+
+    @GetMapping("/disconnect")
+    public String disconnect(Model model){
+        db_service.disconnect();
+        return "homeview";
     }
 }

@@ -13,15 +13,25 @@ try {
 
 }catch (e){
     println("error, trying to start the mongodb service")
+    e.printStackTrace()
     //check if some process is on port 27017
 
     //if is not--> start up mongod
     def started = false
     try {
-       print "net start MongoDB".execute().text
+//       print "net start MongoDB".execute().text
+
+
+        ProcessBuilder pb = new ProcessBuilder()
+        pb.command("C:\\Program Files\\MongoDB\\Server\\3.6\\bin\\mongod.exe", "--dbpath", "C:\\Users\\jannik.meier\\data\\db")
+        Process p
+        p = pb.start()
+        println(p.isAlive())
+
         println("successfully started mongoDB")
         started = true
     }catch (e2){
+        e2.printStackTrace()
         started = false
         println("failed to start mongodb Service, please start manually")
     }

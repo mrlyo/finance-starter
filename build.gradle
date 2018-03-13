@@ -34,6 +34,11 @@ dependencies {
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('org.projectlombok:lombok')
 	compile('org.projectlombok:lombok')
+	// https://mvnrepository.com/artifact/org.mongodb.scala/mongo-scala-driver
+	compile group: 'org.mongodb.scala', name: 'mongo-scala-driver_2.12', version: '2.2.1'
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	compile 'org.mongodb:mongo-java-driver:2.12.3'
+    // https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.6.3'
+
 }
