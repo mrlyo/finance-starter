@@ -1,6 +1,8 @@
 # finance-starter
 
+## my little project for tech research
 
-start db first with net start MongoDB
+### **Important!**
+Make sure, that you have **MongoDB** installed on the computer you use during dev.
 
-and close always after use!
+After starting the Application, you can reach the app under <localhost:8080>.
