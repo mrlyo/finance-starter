@@ -1,68 +1,80 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Title</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></link>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 </head>
 <body>
 <div class="container">
     <h1>Hallo Welt</h1>
 
-    <div class="row" th:if="${daten}">
-        <form class="col-12" enctype="multipart/form-data"
-              th:object="${daten}" method="post" th:action="@{/sendFormData}">
+    <div class="row" th:if="${transaction}">
+        <form class="col-6 offset-md-3" enctype="multipart/form-data"
+              th:object="${transaction}" method="post" th:action="@{/sendFormData}">
 
             <div>
+                <label>Subject</label>
                 <input type="text" th:field="*{subject}"/>
             </div>
             <div>
+                <label>amount</label>
                 <input type="text" th:field="*{amount}"/>
             </div>
             <div>
+                <label>type</label>
                 <input type="text" th:field="*{type}"/>
             </div>
             <div>
-            <input class="btn btn-primary" type="submit"/>
+                <input class="btn btn-primary" type="submit"/>
             </div>
         </form>
+    </div>
+
+
+    <div th:if="${result}">
+        <label th:value="${result}" th:text="${result}"></label>
+    </div>
+
+    <div>
+        <a class="btn btn-primary" th:href="@{/listTransactions}" type="button">load transactions</a>
+    </div>
+    <div class="row" th:if="${transactions}">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>subject</th>
+                <th>amount</th>
+                <th>type</th>
+            </tr>
+            </thead>
+
+            <tbody th:each="transaction : ${transactions}">
+
+            <tr>
+                <td th:text="${transaction.subject}"></td>
+                <td th:text="${transaction.amount}"></td>
+                <td th:text="${transaction.type}"></td>
+            </tr>
+
+            </tbody>
+        </table>
     </div>
 </div>
 
 
-
-<div th:if="${result}">
-    <label th:value="${result}" th:text="${result}"></label>
-</div>
-<div th:if="${databases}">
-    <p th:each="String : ${databases}">
-        <a th:value="${String}" th:text="${String}"></a>
-    </p>
-
-    <a type="button" class="btn btn-info" th:href="@{/disconnect}">Disconnect</a>
-</div>
-<div th:if="not ${databases}">
-    <a type="button" class="btn btn-info" th:href="@{/connect}">Connect</a>
-</div>
-<div>
-    <a class="btn btn-primary" th:href="@{/listTransactions}" type="button">load transactions</a>
-</div>
-<div th:if="${transactions}">
-    <table class="table table-striped">
-        <thead>
-        <title>name</title>
-        </thead>
-        <tbody th:each="Document : ${transactions}">
-    <tr th:text="${Document.type}"></tr>
-        </tbody>
-    </table>
-</div>
-
-
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 </body>
 </html>

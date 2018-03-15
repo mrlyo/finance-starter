@@ -7,11 +7,30 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ViewModel {
+public class Transaction {
 
-private String amount;
-private String subject;
-private String type;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String id;
+    private String amount;
+    private String subject;
+    private String type;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
 
     public String getAmount() {
         return amount;

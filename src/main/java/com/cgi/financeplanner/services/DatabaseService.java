@@ -1,26 +1,22 @@
 package com.cgi.financeplanner.services;
 
-import com.cgi.financeplanner.models.ViewModel;
+import com.cgi.financeplanner.models.Transaction;
 import com.mongodb.MongoClient;
-import com.mongodb.DBCollection;
-import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.stereotype.Service;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.UnknownHostException;
-import java.sql.Date;
-import java.text.DateFormat;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-
-import static com.mongodb.client.model.Filters.eq;
 
 
 @Service
@@ -32,50 +28,28 @@ public class DatabaseService {
 
     String connectionResult;
 
+    @Autowired
+    private MongoOperations template;
 
     public DatabaseService() {
     }
 
+    public List<Transaction> ReturnAllTransactions() {
 
-    public List<String> readDatabases() {
-        List<String> dblist;
-        String result;
+        BasicQuery query = new BasicQuery("{ 'name' : 'transaction' }");
+        logger.info("{}", template.getCollection("transactions").getNamespace().toString());
 
+        List<Transaction> list = null;
         try {
-            mongoClient = new MongoClient("localhost", 27017);
-            dblist = mongoClient.getDatabaseNames();
+            list = template.find(query, Transaction.class);
         } catch (Exception e) {
-            logger.info("Reading databases failed. Trying to connect to DB");
-
-            try {
-                result = connect();
-                mongoClient = new MongoClient("localhost", 27017);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-
-            dblist = mongoClient.getDatabaseNames();
+            startMongoScript();
+            list = template.find(query, Transaction.class);
         }
-        mongoClient.close();
-        return dblist;
-
-    }
-
-    public FindIterable<Document> ReturnAllTransactions() {
-
-        MongoCollection<Document> collection;
-        FindIterable<Document> findIterable;
-
-            mongoClient = new MongoClient("localhost", 27017);
-            MongoDatabase db = mongoClient.getDatabase("finances");
-            collection = db.getCollection("transactions");
-            logger.info("Hat collection {} gefunden", collection.getNamespace());
-            findIterable = collection.find(eq("name", "transaction"));
-            mongoClient.close();
-            return findIterable;
-
-
-
+        if(list != null) {
+            logger.info("Hat in der collection insgesamt {} transactions gefunden", list.size());
+        }
+        return list;
     }
 
     //TODO check db connection, execute connection script
@@ -87,24 +61,14 @@ public class DatabaseService {
 
     //TODO write to db
 
-    public void insert(ViewModel viewModel) {
+    public void insert(Transaction transaction) {
 
-        Document document = new Document("name", "transaction")
-                .append("amount", viewModel.getAmount())
-                .append("subject", viewModel.getSubject())
-                .append("type", viewModel.getType());
-
-        MongoCollection<Document> coll;
         try {
-            mongoClient = new MongoClient("localhost", 27017);
-            MongoDatabase db = mongoClient.getDatabase("finances");
-            coll = db.getCollection("transactions");
-            logger.info("Hat collection {} gefunden", coll.getNamespace());
-            coll.insertOne(document);
-            logger.info("Erfolgreiches Insert");
-            mongoClient.close();
+            transaction.setName("transaction");
+            template.insert(transaction);
         } catch (Exception e) {
-            logger.info("Fehler beim insert");
+            e.printStackTrace();
+            logger.info("Could not insert transaction");
         }
     }
 

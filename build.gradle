@@ -36,6 +36,8 @@ dependencies {
 	compile('org.projectlombok:lombok')
 	// https://mvnrepository.com/artifact/org.mongodb.scala/mongo-scala-driver
 	compile group: 'org.mongodb.scala', name: 'mongo-scala-driver_2.12', version: '2.2.1'
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.0.0.RELEASE'
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')
     // https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver

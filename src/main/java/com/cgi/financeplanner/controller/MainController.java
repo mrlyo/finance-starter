@@ -1,6 +1,6 @@
 package com.cgi.financeplanner.controller;
 
-import com.cgi.financeplanner.models.ViewModel;
+import com.cgi.financeplanner.models.Transaction;
 import com.cgi.financeplanner.services.DatabaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,46 +22,33 @@ public class MainController {
     private DatabaseService db_service;
 
     @GetMapping("/")
-    public String redirecthome(){
+    public String redirecthome() {
         return "redirect:/start";
     }
 
     @GetMapping("/start")
-    public String home(Model model){
+    public String home(Model model) {
         logger.info("home methode wurde aufgerufen.");
-//        ViewModel viewmodel = new ViewModel();
-//        model.addAttribute("daten", viewmodel);
+        model.addAttribute("transaction", new Transaction());
         return "homeview";
     }
 
 
     @PostMapping("/sendFormData")
-    public String sendFormData(@ModelAttribute ViewModel daten, Model model){
-        db_service.insert(daten);
-        return "homeview";
-    }
+    public String sendFormData(@ModelAttribute Transaction transaction, Model model) {
 
-    @GetMapping("/connect")
-    public String connect(Model model){
-        logger.info("Die Controllermethode connect wurde aufgerufen.");
-        String result = "";
-        model.addAttribute("daten", new ViewModel());
-        List<String> liste = db_service.readDatabases();
-        model.addAttribute("databases",liste );
-        logger.info("Die Datenbankabfrage hat {} Datenbanken gefunden", liste);
+        logger.info("Eine transaction wurde gepostet {}", transaction.getSubject());
+        db_service.insert(transaction);
+
         return "homeview";
     }
 
     @GetMapping("/listTransactions")
-    public String listTransactions(Model model){
+    public String listTransactions(Model model) {
 
-       model.addAttribute("transactions", db_service.ReturnAllTransactions());
+        model.addAttribute("transactions", db_service.ReturnAllTransactions());
+        model.addAttribute("transaction", new Transaction());
         return "homeview";
     }
 
-    @GetMapping("/disconnect")
-    public String disconnect(Model model){
-        db_service.disconnect();
-        return "homeview";
-    }
 }
