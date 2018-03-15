@@ -1,10 +1,6 @@
 package com.cgi.financeplanner.services;
 
 import com.cgi.financeplanner.models.Transaction;
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 
 @Service
 public class DatabaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    private MongoClient mongoClient;
-    private MongoDatabase database;
-
-    String connectionResult;
 
     @Autowired
     private MongoOperations template;
@@ -46,9 +35,8 @@ public class DatabaseService {
             startMongoScript();
             list = template.find(query, Transaction.class);
         }
-        if(list != null) {
-            logger.info("Hat in der collection insgesamt {} transactions gefunden", list.size());
-        }
+        logger.info("Hat in der collection insgesamt {} transactions gefunden", list.size());
+       
         return list;
     }
 
@@ -62,7 +50,6 @@ public class DatabaseService {
     //TODO write to db
 
     public void insert(Transaction transaction) {
-
         try {
             transaction.setName("transaction");
             template.insert(transaction);
@@ -75,42 +62,6 @@ public class DatabaseService {
     //TODO update in db
 
     //TODO delete from db
-
-    private String connect() {
-        logger.info("Die DatabaseServicemethode connect() wurde aufgerufen");
-        try {
-            mongoClient = new MongoClient("localhost", 27017);
-            mongoClient.getDatabaseNames();
-
-        } catch (Exception ex) {
-            logger.info("MongoTimeoutException");
-            ex.printStackTrace();
-
-            logger.info("Starting DB Connection Script 'startmongo.bat'");
-            int status = startMongoScript();
-            if (status == 1) {
-                logger.info("MongoDB started");
-                try {
-                    TimeUnit.SECONDS.sleep(5);
-                    logger.info("waiting");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                database = mongoClient.getDatabase("finances");
-                connectionResult = "success";
-            } else {
-                logger.info("MongoDB script startup failed");
-                connectionResult = "failed";
-            }
-        }
-        mongoClient.close();
-        return connectionResult;
-    }
-
-    public void disconnect() {
-
-        mongoClient.close();
-    }
 
     private int startMongoScript() {
         logger.info("starting MongoScript");
